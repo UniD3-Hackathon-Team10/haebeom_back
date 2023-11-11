@@ -11,20 +11,20 @@ datasource db {
 }
 
 model Post {
-  id        Int       @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    Int
   type      Int
   title     String
-  content   String    @db.Text
-  time      DateTime?
-  country   String    @db.VarChar(45)
-  city      String    @db.VarChar(45)
-  latitude  Decimal   @db.Decimal(18, 10)
-  longitude Decimal   @db.Decimal(18, 10)
-  picture   String?   @db.Text
-  likeCount Int       @default(0)
-  createdAt DateTime  @default(now())
-  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction)
+  content   String   @db.Text
+  time      String?  @db.VarChar(255)
+  country   String   @db.VarChar(45)
+  city      String   @db.VarChar(45)
+  latitude  Decimal  @db.Decimal(18, 10)
+  longitude Decimal  @db.Decimal(18, 10)
+  picture   String?  @db.Text
+  likeCount Int      @default(0)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
   likes     Like[]
   claims    Claim[]
 

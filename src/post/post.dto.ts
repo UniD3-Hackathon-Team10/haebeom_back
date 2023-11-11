@@ -4,7 +4,7 @@ export default class PostDto {
   type: number;
   title: string;
   content: string;
-  time?: Date;
+  time?: string;
   country: string;
   city: string;
   latitude: number;
