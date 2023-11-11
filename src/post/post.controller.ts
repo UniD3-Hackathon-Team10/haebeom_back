@@ -26,6 +26,30 @@ export class PostController {
       return res.status(200).json(serviceResult.data);
     else return res.status(serviceResult.code).json(serviceResult.data);
   }
+  @Post('/like')
+  async likePost(@Req() req, @Res() res: Response) {
+    const serviceResult: ServiceResult = await this.postService.likePost(
+      req.body.userId,
+      req.body.postId,
+    );
+
+    if (serviceResult.code === 200)
+      return res.status(200).json(serviceResult.data);
+    else return res.status(serviceResult.code).json(serviceResult.data);
+  }
+  @Get('/category/:id')
+  async getCategoryPost(
+    @Req() req,
+    @Param('id') category,
+    @Res() res: Response,
+  ) {
+    const serviceResult: ServiceResult =
+      await this.postService.getCategoryPost(category);
+
+    if (serviceResult.code === 200)
+      return res.status(200).json(serviceResult.data);
+    else return res.status(serviceResult.code).json(serviceResult.data);
+  }
   @Get('/:id')
   async getPostDetail(@Req() req, @Param('id') postId, @Res() res: Response) {
     const serviceResult: ServiceResult =
