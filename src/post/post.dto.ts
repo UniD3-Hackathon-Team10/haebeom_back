@@ -1,7 +1,7 @@
 export default class PostDto {
   id?: number;
   userId: number;
-  type: string;
+  type: number;
   title: string;
   content: string;
   time?: Date;

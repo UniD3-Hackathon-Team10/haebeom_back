@@ -51,4 +51,29 @@ export class PostService {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
+  public async getPostDetail(postId) {
+    try {
+      const info = await this.prisma.post.findUnique({
+        where: { id: parseInt(postId) },
+      });
+
+      if (info) {
+        const serviceResult: ServiceResult = {
+          code: 200,
+          message: 'Success!',
+          data: info,
+        };
+        return serviceResult;
+      } else {
+        const serviceResult: ServiceResult = {
+          code: 404,
+          message: 'No data',
+        };
+        return serviceResult;
+      }
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

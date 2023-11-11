@@ -13,7 +13,7 @@ datasource db {
 model Post {
   id        Int       @id @default(autoincrement())
   userId    Int
-  type      String    @db.VarChar(45)
+  type      Int
   title     String
   content   String    @db.Text
   time      DateTime?
