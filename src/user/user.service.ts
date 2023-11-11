@@ -6,6 +6,17 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
   public async login(deviceId) {
     try {
+      const data = await this.prisma.user.findUnique({
+        where: { deviceId: deviceId },
+      });
+      if (data) {
+        const serviceResult: ServiceResult = {
+          code: 200,
+          message: 'Already Exist!',
+          data: data,
+        };
+        return serviceResult;
+      }
       const info = await this.prisma.user.create({
         data: { deviceId: deviceId },
       });
