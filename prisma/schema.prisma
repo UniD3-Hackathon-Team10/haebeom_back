@@ -1,0 +1,71 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["orderByNulls"]
+  binaryTargets   = ["native", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  type      String    @db.VarChar(45)
+  title     String
+  content   String    @db.Text
+  time      DateTime?
+  country   String    @db.VarChar(45)
+  city      String    @db.VarChar(45)
+  latitude  Decimal   @db.Decimal(18, 10)
+  longitude Decimal   @db.Decimal(18, 10)
+  picture   String?   @db.Text
+  likeCount Int       @default(0)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: NoAction)
+  likes     Like[]
+  claims    Claim[]
+
+  @@index([userId], map: "userId")
+}
+
+model Like {
+  userId    Int
+  postId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction)
+
+  @@id([userId, postId])
+  @@index([postId], map: "postId")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  deviceId  String   @unique(map: "deviceId")
+  likes     Like[]
+  claims    Claim[]
+  posts     Post[]
+}
+
+model Crime {
+  type       String @id @db.VarChar(45)
+  precaution String @db.Text
+}
+
+model Claim {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  claimType String   @db.VarChar(45)
+  reason    String?  @db.Text
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: NoAction)
+
+  @@index([postId], map: "postId")
+  @@index([userId], map: "userId")
+}
