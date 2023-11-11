@@ -76,7 +76,33 @@ export class PostService {
       throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+  public async getLike(userId, postId) {
+    try {
+      const likeData = {
+        userId: parseInt(userId),
+        postId: parseInt(postId),
+      };
+      var isLike = await this.prisma.like.findUnique({
+        where: { userId_postId: likeData },
+      });
+      if (isLike) {
+        const serviceResult: ServiceResult = {
+          code: 200,
+          message: 'like true!',
+          data: isLike,
+        };
+        return serviceResult;
+      } else {
+        const serviceResult: ServiceResult = {
+          code: 404,
+          message: 'No data',
+        };
+        return serviceResult;
+      }
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
   public async likePost(userId, postId) {
     try {
       const likeData = {
@@ -89,6 +115,50 @@ export class PostService {
       if (exPost) {
         const info = await this.prisma.like.create({ data: likeData });
         exPost.likeCount = exPost.likeCount + 1;
+        const post = await this.prisma.post.update({
+          where: { id: parseInt(postId) },
+          data: exPost,
+        });
+        if (info) {
+          const serviceResult: ServiceResult = {
+            code: 200,
+            message: 'Success!',
+            data: post,
+          };
+          return serviceResult;
+        } else {
+          const serviceResult: ServiceResult = {
+            code: 404,
+            message: 'No data',
+          };
+          return serviceResult;
+        }
+      } else {
+        const serviceResult: ServiceResult = {
+          code: 404,
+          message: 'No data',
+        };
+        return serviceResult;
+      }
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  public async removeLike(userId, postId) {
+    try {
+      const likeData = {
+        userId: parseInt(userId),
+        postId: parseInt(postId),
+      };
+      var exPost = await this.prisma.post.findUnique({
+        where: { id: parseInt(postId) },
+      });
+      if (exPost) {
+        const info = await this.prisma.like.delete({
+          where: { userId_postId: likeData },
+        });
+        exPost.likeCount = exPost.likeCount - 1;
         const post = await this.prisma.post.update({
           where: { id: parseInt(postId) },
           data: exPost,
