@@ -1,7 +1,7 @@
-import { CrimeService } from './CrimeService';
 import { Response } from 'express';
 import ServiceResult from 'src/utils/serviceResult';
 import { Controller, Post, Req, Res, Get, Param } from '@nestjs/common';
+import { CrimeService } from './crime.service';
 
 @Controller('crime')
 export class CrimeController {
